@@ -32,4 +32,12 @@ export class TestingService {
   async testVoiceServices(audioFile: File): Promise<string> {
     return this.voiceAPIClient.transcribeAudio(audioFile);
   }
+
+  async benchmarkPerformance(): Promise<any> {
+    const start = process.hrtime();
+    await this.testCoreAIServices('Benchmarking core AI services');
+    const end = process.hrtime(start);
+    const duration = end[0] * 1000 + end[1] / 1000000; // convert to milliseconds
+    return { duration };
+  }
 }
