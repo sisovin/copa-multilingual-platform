@@ -6,7 +6,7 @@ class VoiceAPIClient {
   private apiKey: string;
 
   constructor(apiKey: string) {
-    this.apiKey = apiKey;
+    this.apiKey = this.apiKey;
   }
 
   async transcribeAudio(audioFile: File): Promise<string> {
