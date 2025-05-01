@@ -57,4 +57,58 @@ describe('TestingController (e2e)', () => {
         expect(res.body).toHaveProperty('result');
       });
   });
+
+  // E2E test for user login
+  it('/POST auth/login', () => {
+    return request(app.getHttpServer())
+      .post('/auth/login')
+      .send({ username: 'testuser', password: 'testpassword' })
+      .expect(200)
+      .expect((res) => {
+        expect(res.body).toHaveProperty('accessToken');
+      });
+  });
+
+  // E2E test for user registration
+  it('/POST auth/register', () => {
+    return request(app.getHttpServer())
+      .post('/auth/register')
+      .send({ username: 'newuser', password: 'newpassword' })
+      .expect(201)
+      .expect((res) => {
+        expect(res.body).toHaveProperty('id');
+        expect(res.body).toHaveProperty('username', 'newuser');
+      });
+  });
+
+  // E2E test for getting technical interview prompt
+  it('/GET interview/tech-prompt', () => {
+    return request(app.getHttpServer())
+      .get('/interview/tech-prompt')
+      .expect(200)
+      .expect((res) => {
+        expect(res.body).toHaveProperty('prompt');
+      });
+  });
+
+  // E2E test for getting behavioral interview prompt
+  it('/GET interview/behavioral-prompt', () => {
+    return request(app.getHttpServer())
+      .get('/interview/behavioral-prompt')
+      .expect(200)
+      .expect((res) => {
+        expect(res.body).toHaveProperty('prompt');
+      });
+  });
+
+  // E2E test for evaluating interview response
+  it('/POST interview/evaluate', () => {
+    return request(app.getHttpServer())
+      .post('/interview/evaluate')
+      .send({ response: 'This is a test response.' })
+      .expect(201)
+      .expect((res) => {
+        expect(res.body).toHaveProperty('evaluation');
+      });
+  });
 });
