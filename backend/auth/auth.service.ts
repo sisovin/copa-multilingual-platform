@@ -2,10 +2,17 @@ import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { AuthDto } from './dto/auth.dto';
 import { User } from './user.entity';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly jwtService: JwtService) {}
+  constructor(
+    private readonly jwtService: JwtService,
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
+  ) {}
 
   async login(authDto: AuthDto): Promise<{ accessToken: string }> {
     const user = await this.validateUser(authDto);
@@ -16,19 +23,18 @@ export class AuthService {
   }
 
   async register(authDto: AuthDto): Promise<User> {
-    // Implement user registration logic here
-    const user = new User();
-    user.username = authDto.username;
-    user.password = authDto.password; // In a real application, make sure to hash the password
-    // Save the user to the database
-    return user;
+    const { username, password } = authDto;
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const user = this.userRepository.create({ username, password: hashedPassword });
+    return this.userRepository.save(user);
   }
 
   private async validateUser(authDto: AuthDto): Promise<User> {
-    // Implement user validation logic here
-    const user = new User();
-    user.username = authDto.username;
-    user.password = authDto.password;
-    return user;
+    const { username, password } = authDto;
+    const user = await this.userRepository.findOne({ where: { username } });
+    if (user && await bcrypt.compare(password, user.password)) {
+      return user;
+    }
+    throw new Error('Invalid credentials');
   }
 }
