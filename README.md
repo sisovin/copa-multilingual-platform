@@ -1,7 +1,3 @@
-Here is the finalized comprehensive README file for the **COPA AI Multilingual Platform**:
-
----
-
 # COPA AI Multilingual Platform
 
 ![License](https://img.shields.io/github/license/sisovin/copa-multilingual-platform)
