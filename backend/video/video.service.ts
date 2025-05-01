@@ -20,7 +20,15 @@ export class VideoService {
   }
 
   private initializePeerConnection(createPeerConnectionDto: any): any {
-    // Implement peer connection initialization logic here
-    return {};
+    const peerConnection = new RTCPeerConnection(createPeerConnectionDto);
+    peerConnection.onicecandidate = (event) => {
+      if (event.candidate) {
+        // Handle ICE candidate
+      }
+    };
+    peerConnection.ontrack = (event) => {
+      // Handle track event
+    };
+    return peerConnection;
   }
 }
