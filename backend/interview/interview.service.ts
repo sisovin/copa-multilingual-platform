@@ -1,26 +1,32 @@
 import { Injectable } from '@nestjs/common';
 import OpenAIClient from 'packages/ai/clients/openai';
+import GoogleTranslator from 'packages/ai/translators/google';
 
 @Injectable()
 export class InterviewService {
   private openAIClient: OpenAIClient;
+  private googleTranslator: GoogleTranslator;
 
   constructor() {
     this.openAIClient = new OpenAIClient(process.env.OPENAI_API_KEY);
+    this.googleTranslator = new GoogleTranslator(process.env.GOOGLE_TRANSLATION_API_KEY);
   }
 
-  getTechPrompt(): string {
-    // Implement logic to return a technical interview prompt
-    return 'Please describe a challenging technical problem you have faced.';
+  async translatePrompt(prompt: string, targetLanguage: string): Promise<string> {
+    return this.googleTranslator.translateText(prompt, targetLanguage);
   }
 
-  getBehavioralPrompt(): string {
-    // Implement logic to return a behavioral interview prompt
-    return 'Tell me about a time you had to work in a team.';
+  async getTechPrompt(targetLanguage: string = 'en'): Promise<string> {
+    const prompt = 'Please describe a challenging technical problem you have faced.';
+    return this.translatePrompt(prompt, targetLanguage);
+  }
+
+  async getBehavioralPrompt(targetLanguage: string = 'en'): Promise<string> {
+    const prompt = 'Tell me about a time you had to work in a team.';
+    return this.translatePrompt(prompt, targetLanguage);
   }
 
   async evaluateResponse(response: string): Promise<string> {
-    // Implement logic to evaluate the interview response using GPT-4
     const prompt = `Evaluate the following interview response: ${response}`;
     const evaluation = await this.openAIClient.generateText(prompt);
     return evaluation;
