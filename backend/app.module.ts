@@ -7,6 +7,7 @@ import { InterviewModule } from './interview/interview.module';
 import { VideoModule } from './video/video.module';
 import { VoiceModule } from './voice/voice.module';
 import { LanguageModule } from './language/language.module';
+import { TestingModule } from './testing/testing.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { LanguageModule } from './language/language.module';
     VideoModule,
     VoiceModule,
     LanguageModule,
+    TestingModule,
   ],
 })
 export class AppModule {}
